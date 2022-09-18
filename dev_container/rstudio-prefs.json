@@ -1,0 +1,44 @@
+{
+    "initial_working_directory": "~",
+    "font_size_points": 12,
+    "editor_theme": "Tomorrow Night Bright",
+    "posix_terminal_shell": "bash",
+    "save_workspace": "never",
+    "load_workspace": false,
+    "highlight_selected_line": true,
+    "show_margin": false,
+    "rainbow_parentheses": true,
+    "show_diagnostics_other": true,
+    "panes": {
+        "quadrants": [
+            "Source",
+            "TabSet1",
+            "Console",
+            "TabSet2"
+        ],
+        "tabSet1": [
+            "Environment",
+            "Presentation"
+        ],
+        "tabSet2": [
+            "Files",
+            "Plots",
+            "VCS",
+            "Packages",
+            "Help",
+            "Viewer",
+            "Presentations"
+        ],
+        "hiddenTabSet": [
+            "History",
+            "Connections",
+            "Build",
+            "Tutorial"
+        ],
+        "console_left_on_top": false,
+        "console_right_on_top": true,
+        "additional_source_columns": 0
+    },
+    "server_editor_font_enabled": true,
+    "server_editor_font": "Menlo"
+}

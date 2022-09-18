@@ -1,0 +1,471 @@
+---
+title: "Intro to Docker"
+author: "David Kingman"
+format: 
+  html:
+    theme: cerulean
+    toc: true
+    toc-depth: 3
+    self-contained: true
+    link-external-icon: true
+    link-external-newwindow: true
+editor_options: 
+  chunk_output_type: console
+---
+```{r}
+#| echo: false
+#| message: false
+library(tidyverse)
+```
+
+## 1. What is Docker?
+
+- Wipedia defines Docker as:
+
+> "An open-source project that automates the deployment of software applications inside containers by providing an additional layer of abstraction and automation of OS-level virtualization on Linux."
+
+- In simpler words, Docker is a tool that allows developers, data scientists and system administrators to easily deploy their applications in a sandboxed process (called a **container**) to run on the host operating system i.e. Linux. 
+
+- The key benefit of Docker is that it allows users to package an application with all of its dependencies into a standardized unit for software development, creating a fully reproducible environment. This decouples the container environment from the hardware on which it is being run.
+
+- In a data science context, Docker containers are normally used for one of two purposes (both use cases can occur in the same project):
+  + Creating a fully reproducible development environment for scientific computing, so that running the same code within that environment should always produce exactly the same results and you can keep different projects fully isolated from each other even if you're developing them on the same physical computer (e.g. so you can have a different version of R or Python installed in different containers for use with different projects); this also means you can send a Dockerfile to a collaborator and they should be able to fully reproduce your original development environment.
+  + Hosting applications, such as interactive dashboards, websites or machine learning models, in such a way that you can guarantee that the development environment and the hosting environment will be identical; this can be achieved by developing the software within a local version of a Docker container and then pushing the same Docker container so it is hosted on a server in the cloud.
+
+- Unlike virtual machines (VMs), containers do not have high overhead and hence enable more efficient usage of the underlying system and resources. This makes it much easier to host multiple containers simultaneously on the same hardware. They are also easier to modify (e.g. through updating a Dockerfile) and more secure than VMs.
+
+## 2. Key Docker terminology
+
+### 2.1 The Docker host
+- This is the physical computer system on which the Docker container runs; one of the key ideas behind Docker containers is portability, so the same Docker image could be used to build a container on any host computer from a basic laptop to a cloud hosting service.   
+
+### 2.2 The Docker daemon
+- The Docker daemon (also referred to as *dockerd*) does the heavy lifting behind the scenes of listening for Docker API requests and managing Docker objects such as images, containers, networks, and volumes. A daemon can also communicate with other daemons to manage Docker services. 
+
+- Your direct interaction with the Docker daemon is normally limited to checking that is running when you want it to be.
+
+### 2.3 The Docker client
+- The Docker client is normally how users interact with the Docker daemon through the Docker API.
+
+- The Docker client has a CLI which allows you to execute commands such as `docker run` and `docker stop` to start and stop Docker containers. The Docker client sends these commands to the Docker daemon for execution.
+
+### 2.4 Docker Desktop
+- Docker Desktop is a frontend user interface for Docker which includes Docker daemon, the Docker client and some other utilities to make installing and using Docker as straightforward as possible.
+
+- Installing Docker Desktop is the most common way of making Docker available on a system.
+
+### 2.5 Docker images
+- A Docker image is a read-only template which contains the instructions for building a Docker container - this is akin to a recipe which the Docker daemon uses to build the container. It is the same abstract principle which a *renv.lock* file uses to rebuild an R package environment from a template. 
+
+- Images are built in layers which specify all of the dependencies which are necessary to build the Docker container. This includes a base operating system, other system utilities (e.g. Pandoc or Fortran or C compilers), any software which needs to be installed within the container (e.g. R Studio), code, code dependencies (such as specific versions of R or Python packages) and data.
+
+- As images are quite complicated and they are constructed from a series of layers, custom images are often built hierarchically on top of other images. For example, the Rocker project is an open-source initiative that provides a set of R container images which are built on top of more basic Linux images to which a version of R and installations of certain R packages have been added.
+
+- Differ versions of the same image be **tagged** - for example, as an image evolves over time each new release of that image should be tagged to distinguish it from the previous versions (this is very similar to how git tags can be used to identify specific releases of R packages).
+
+### 2.6 Dockerfiles
+- A Dockerfile is a plain text file which contains the instructions necessary to create a Docker image. They can be edited using any text editor.
+
+- Dockerfiles have a simple syntax in which each instruction creates a specific layer in the image. You can update a Docker image by editing the Dockerfile, and then when you command the Docker daemon to rebuild the image it will only update the parts of it that have been altered, which makes Docker containers very efficient to update.
+
+### 2.7 Docker registries
+- A Docker registry is a repository which is used to store versioned Docker images; it archives reusable Docker images in a way which is analogous to how the CRAN archives versions of R packages.
+
+- The largest public Docker registry is Docker Hub, which is where Docker is configured to search for images by default. You can search Docker Hub to find particular images by reputable publishers, such as images produced by the Rocker project.
+
+- When you use the `docker pull` or `docker run` commands, the required images are pulled from your configured registry. When you use the `docker push` command, your image is pushed to your configured registry.
+
+### 2.8 Docker containers
+- A Docker container is a runnable instance of a Docker image. You can create, start, stop, move or delete a container by writing commands using the Docker client.
+
+- Docker containers can publish network ports, which enables them to connect to networks. They can also have storage volumes attached to them, which facilitates the ephemeral storage of data within the container while it is running. 
+
+- A Docker container can be isolated from any other containers which are running on the same hardware and runs its own software, binaries and configurations. This means it is portable, and the same container can be run on any operating system and any hardware, whether that's a local machine, a virtual machine or a cloud deployment service.
+
+- When running a container, it uses an isolated filesystem. This custom filesystem is provided by a container image. Since the image contains the container’s filesystem, it must contain everything needed to run an application - all dependencies, configurations, scripts, binaries, etc. The image also contains other configuration for the container, such as environment variables, a default command to run, and other metadata.
+
+- To use a container, an instance of that container first has to be built from an image. Then once an instance has been built on a system by the Docker daemon, that version of the container can be then be started and stopped to control system resource usage.
+
+- Docker containers are fundamentally ephemeral: if the image gets updated (e.g. because you want to include a newer version of an R package in the image), the old instance can be destroyed and then a new instance can be built from the updated image. This also means that any changes which aren't part of the Docker image which is used to build the container are ephemeral as well.
+
+## 3. Docker prerequisites
+
+### 3.1 Install Docker
+
+1. Install Docker on your system (this includes downloading the Docker Desktop GUI).
+2. Create a Docker Hub account.
+3. Run the following command in a terminal to check that Docker has installed correctly and the Docker Daemon is running:
+
+```{bash}
+#| eval: false
+docker run hello-world
+```
+
+### 3.2 Basic bash commands
+
+- As Docker is easiest to interact with from the command line, it's helpful to know some basic command line commands in order to use it. The table below shows a selection of useful Linux commands:
+
+```{r}
+#| echo: false
+#| message: false
+'linux_commands_cheatsheet.csv' %>% 
+  here::here() %>% 
+  readr::read_csv(show_col_types = FALSE) %>% 
+  knitr::kable()
+```
+
+- There are lots of command line resources online, such as the following: [The top 40 Linux commands](https://kinsta.com/blog/linux-commands/).
+
+### 3.3 Network ports
+
+- Interacting with a Docker container involves using network ports. A running Docker container can publish ports which can be mapped to a port on the host machine in order for processes which are running within the container to be accessible through a web browser. Examples of commands where this takes place are shown below.
+
+- These network ports are analogous to the two systems, the running container and the host machine, each having an email address which they can use to send messages to each other. The process of mapping ports when running a container is analogous to two people sharing their email addresses which they didn't know before so that they can start sending each other messages.
+
+## 4. Pulling and running Docker images
+
+- We can run some basic Docker commands using the Docker CLI to get a feel for how they work. To pull the current latest version of a specified Docker image from Docker Hub and install it on our local system, we can use the `docker pull` command (*busybox* is a very basic Linux image we can use for testing purposes):
+
+```{bash}
+#| eval: false
+docker pull busybox
+```
+
+- `docker run` is arguably the most important Docker command, as it instructs the Docker daemon to build a container from an image as described above. The following command builds and runs the busybox image, prints out a message from inside the container to the console and then stops the container:
+
+```{bash}
+#| eval: false
+docker run busybox echo 'hello from busybox'
+```
+
+- If you run a container without entering any other instructions then the Docker daemon will start the container and then immediately stop it again without it producing any output:
+
+```{bash}
+#| eval: false
+docker run busybox
+```
+
+- We can also use the `docker ps` command to look at the history of all the containers we've ever run on our current system, including any we currently have running now (the `-a` flag instructs the Docker daemon to include all the containers we've previously run, rather than just the ones which are running at present):
+
+```{bash}
+docker ps -a
+```
+
+- Of course, we usually want to do more with a container than just starting and stopping it. In order to play around with a container a bit more we can use the following command to activate an interactive bash shell inside the busybox container (the `-it` flag tells Docker to run it interactively, and the `sh` command opens a terminal shell):
+
+```{bash}
+#| eval: false
+docker run -it busybox sh
+```
+
+- We can also see a list of all the flags which the `docker run` command supports (terminal commands allow you to tweak their parameters by supplying `flags`, which are additional arguments that begin with a slash such as `-d`; these can be thought of in the same way as passing user-supplied arguments to a function in R):
+
+```{bash}
+#| eval: false
+docker run --help
+```
+
+- Each stopped container still occupies some disk space, so it's generally a good idea to clean up containers which we're no longer using. This can be done by running `docker rm [CONTAINER ID]` and copying and pasting the `CONTAINER ID` string from the output of the `docker ps` command. Similarly, the command `docker container prune` should remove all stopped containers.
+
+- Likewise, images we no longer need can be removed using the command `docker rmi [IMAGE]` and we can get rid of all images using the command `docker image prune`.
+
+## 5. Running a basic application inside a container
+
+- As explained above, one of the most common use cases for deploying Docker containers is to host web applications like static websites or interactive dashboards. The most basic kind of application you can host in this manner would be a static website with only one HTML webpage.
+
+- Deploying an application like this involves running a Docker container in the background rather than interactively, and publishing a network port from the container so that users can access the application using a web browser.
+
+- The following Docker command will pull a Docker image which deploys an extremely basic single page website, build and run the container in the background, assign the container a name and publish a port so that it can be accessed by navigating a web browser to `localhost::80`:
+
+```{bash}
+#| eval: false
+docker run -d -p 8888:80 --name static-site prakhar1989/static-site
+```
+
+- In the above command:
+    + `prakhar1989/static-site` is the Docker image which is hosted on Docker Hub (specifically, the image `static-site` belongs to the publisher `prakhar1989`, in a similar manner to how Github repositories belong to their owners); the Docker daemon will pull this image if it doesn't already exist on the local system where the command is being executed.
+    + `--name static-site` tags this Docker container with the name `static-site`; this is useful because it means we can refer to this container when we write subsequent Docker commands rather than having to find its ID.
+    + `-p` maps the container port 8888 to port 80 on the system where the container is being hosted.
+    + `-d` tells the Docker daemon to run the container in *detached mode*, which means it will be run non-interactively in the background rather than interactively in a bash shell.
+    
+- We can run this command and then navigate to `localhost:80` in a web browser to see the webpage up and running. It will then also appear when we run `docker ps`.
+
+- To stop a container which is running in detached mode, we can just run `docker stop [CONTAINER NAME]`. This makes the webpage inaccessible again because the container where it is being hosted is no longer running.
+
+- **A stopped container still exists**. To restart the container you can run the command `docker start [CONTAINER NAME]` (N.B. `docker start` not `docker run`). As long as the container still exists you can keep starting and stopping it.
+
+- As long as a container exists, its name is taken until you delete it. Therefore, you can't create multiple containers with the same name at the same time.
+
+- To delete this image you would run:
+
+```{bash}
+#| eval: false
+docker rm static-site
+```
+
+## 6. Docker images
+
+- As we've already seen, Docker images are the basis of containers. We can see the list of images we have installed locally like this:
+
+```{bash}
+docker images
+```
+
+- In the output from the above command, the TAG refers to a particular snapshot of the image and the IMAGE ID is the corresponding unique identifier for that image.
+
+- Each Docker image is akin to an R package, in the sense that they are open source and their developers commit changes to them over time and release new versions which are tagged with a TAG and an IMAGE ID.
+
+- You can specify which version of image you want to pull by referring to the version number after the image name in the `docker pull` command; e.g. `docker pull busybox: 02.01`.
+
+- To get a new Docker image you can either get it from a registry (such as the Docker Hub) or create your own. 
+
+- An important distinction to be aware of when it comes to images is the difference between base and child images:
+   + Base images are images that have no parent image, usually images with an OS like ubuntu, busybox or debian.
+   + Child images are images that build on base images and add additional functionality; when you write your own images these are usually child images which are based on a base image you've downloaded from Docker Hub.
+   
+- There is also an additional, separate, distinction between official and user images:
+    + Official images are images that are officially maintained and supported by developers at Docker; these are typically one word long, such as `python`, `busybox` or `ubuntu`.
+    + User images are images created and shared by Docker users, which build on base images and add additional functionality; similarly to git repositories, these are usually named using the naming convention user/image-name (indeed, the whole concept is similar to installing a custom R package from another developer's Github repository).
+
+## 7. Writing a Dockerfile for hosting a simple Shiny app
+
+- So far, we've only built Docker containers by running other people's Docker images. However, for our own projects we'll probably want to build our own custom Docker images, which we can achieve by writing a Dockerfile.
+
+- Using a Dockerfile is a two-stage process:
+    1) Writing the Dockerfile;
+    2) Running the `docker build` command to turn the Dockerfile into an image like the `prakhar1989/static-site` image we ran in the previous section.
+    
+- Dockerfiles are built in layers, which reflect different components of the container.
+
+- An example Dockerfile for hosting the 'Visual Machine Learning' shiny app which is contained in the `App.R` file in this repository is shown below as an example:
+
+```{docker}
+#| eval: false
+
+# Build container from Rocker/shiny base image:
+# Ubuntu 20.04
+# R 4.0 
+FROM rocker/shiny:4
+
+# Update installer and install git and system-level package dependencies
+RUN apt-get update && apt-get install -y \
+    make \
+    git \
+    pandoc \
+    libicu-dev \
+    zlib1g-dev
+    
+# Install renv
+ENV RENV_VERSION 0.15.5
+RUN R -e "install.packages('remotes', repos = c(CRAN = 'https://cloud.r-project.org'))"
+RUN R -e "remotes::install_github('rstudio/renv@${RENV_VERSION}')"
+
+# Clone git repo
+RUN git clone https://github.com/David-Kingman/docker_tests.git
+
+# Recreate project package library using renv::restore()
+RUN R -e "renv::restore(lockfile = './docker_tests/renv.lock', repos = c(RSPM = 'https://packagemanager.rstudio.com/all/latest'))"
+
+# Copy App.R into /srv/shiny-server/
+RUN cp docker_tests/App.R /srv/shiny-server/
+
+# Run app
+CMD ["/usr/bin/shiny-server"]
+```
+
+- They principle which underpins a Dockerfile should be **reproducibility**, meaning that the resulting Docker image should work identically wherever it is hosted.
+
+- This is achieved by pinning every element of the Docker image to a specific version, including the operating system version, R version, system libraries, R package versions and code. 
+
+- This doesn't mean that the layers of an image are meant to be set in aspic, but the versions of these things should only be altered deliberately, and when they happen any updates should be tested and reversed if they introduce bugs.
+
+- This Dockerfile contains the following layers:
+    1) A **base image** pulled from Docker Hub - this installs a Linux operating system (Ubuntu 20.04) within the container, a version of R (R 4.0) and Shiny Server. 
+    2) **System libraries** - R packages often depend on external system libraries (e.g. pandoc), and you may need other software such as git to run your code within the container, all of which you need to install explicitly using Linux commands. 
+    3) **Environment variables** - You can set environment variables within the container using the `ENV` command which can then be referenced by other commands.
+    4) An **R package environment** - Reproducing the project's package environment from a `renv` lockfile is the best practice way of doing this, as it provides control over the project's dependencies in a way that can be moved in and out of a container. Installing packages will make the Docker image larger and therefore slower to install, so the R package environment should only contain essential package dependencies.
+    5) **Code** - Cloning a project's git repository is the best way of moving code into and out of the container while maintaining version control. Files (including script files) can also be copied into a container from the host machine during the build process.
+    6) **Commands to run when the container starts (CMD)** - The last step in a Docker container is usually a command which should be executed whenever the container starts or stops running, which can be specified using the linux `CMD` command.
+    
+- The system libraries in the above Dockerfile are not pinned to specific versions because the `apt get` command automatically installs a specific version of each one which is stable for the container's OS, so using the same base image should result in them being implicitly versioned as well.
+    
+- Shiny Server can be configured in various ways which are explained in the online documentation. These configuration options can also be set by editing the Dockerfile.
+
+- The `\` characters within the Dockerfile can be used to improve code readability by splitting Linux commands over multiple lines. In general, any Linx command can be split over multiple lines by writing these characters in the Dockerfile.
+    
+- Dockerfiles often contain these other things as well:
+    + **Code editors** (e.g. R Studio or VS Code) - this is necessary if you are planning to use the container interactively as a sandboxed virtual machine, which is the other main use case of Docker containers among data scientists.
+    + **Credentials** (e.g. passwords or API keys) - these need to be transferred securely to the Docker container if the application is going to interact with a service which requires credentials.
+    + **Publishing ports** (e.g. `EXPOSE 3838` could be included as a layer in the Dockerfile) - these are necessary if the running container needs to be accessible through a web browser, but the `rocker/shiny` base image already exposes port 3838 by default (this also needs to be secured if you want to prevent others from logging into the container).
+    + **Storage volumes** - The image in the Dockerfile above will be completely ephemeral; the only datasets it needs are very small and they get stored in the packages which get installed during the build process. For containers which need to pass data and other objects into and out of the container, external storage volumes which live on the Docker host can be attached to them during the build process, and these will outlive the runtime of the actual container instance itself.
+
+- To turn it into an actual container, the Dockerfile above would need to first be built into an image using the following command:
+
+```{bash}
+#| eval: false
+docker build -t shiny_vml -f app_container/Dockerfile .
+```
+
+- It will then be visible in the name of installed Docker images:
+
+```{bash}
+docker images
+```
+
+- Then you can actually run an instance of this Docker image using the Docker run command shown below, which will make it available locally at the URL `localhost:3838`:
+
+```{bash}
+#| eval: false
+docker run -d -p 3838:3838 --name app_container shiny_vml
+```
+
+- The above command takes port 3838 which is published by the container and maps it to the local port 3838 on our local computer. For the sake of the argument, you could map this to a different port on the local computer, such as `3838:5000`.
+
+- Once the container is running, it can be stopped, restarted, removed and pruned using the commands which were explained in previous sections. It will appear in the list of run containers which you get from running the command below:
+
+```{bash}
+docker ps -a
+```
+
+- Discovering the system-level dependencies of R and Python packages in order to include them in a Docker image can be tricky. Importantly, these are dependent on the Docker image's operating system so they aren't tracked by `renv` or `virtualenv` package environments in either language.
+
+- [Guidance](https://mdneuzerling.com/post/determining-system-dependencies-for-r-projects/) on how you can deal with this is available online, but the most reliable way of discovering what the dependencies are is to use the [R Studio Package Manager (RSPM)](https://packagemanager.rstudio.com/client/#/) which provides a comprehensive set of system-level dependencies for most R packages on different operating systems.
+
+- RSPM has an API which you can query to retrieve this information, and the `remotes` R package provides a function called `remotes::system_requirements()` which lets you query the API to discover the system dependencies which are needed to use specified R packages on a specified version of a particular OS.
+
+- Below is an example of how to use this to discover the dependencies for the Visual Machine Learning app:
+
+```{r}
+# Create vector of package names
+paks <- c('dplyr', 'stringr', 'tibble', 'ggplot2', 'scales', 'skimr', 'nycflights13', 'gapminder', 'ISLR2', 'shiny', 'bslib', 'thematic', 'DT', 'FNN', 'rpart', 'rpart.plot')
+
+# Query RSPM API (rocker/shiny:4.0 is based on Ubuntu 20.04)
+remotes::system_requirements(package = paks, os = 'ubuntu', os_release = '20.04')
+```
+
+- Hard-coding the Docker image's dependencies into the Dockerfile like in the example above can work for relatively basic Dockerfiles, but it makes it trickier to update. This can be automated so that the list of dependencies will automatically get updated as the list of R packages being used within the container changes.
+
+- *R Studio Package Manager* also provides Linux binaries for R and Python packages which should install into a Docker image during the build process much more quickly than if you have to install them from CRAN. You can tell `renv::restore()` to use this repo using the parameters shown in the Dockerfile above (using this argument reduces the time required to build this image from over 15 minutes to just under 4 minutes).
+
+- In order to host a Shiny App on the web, this image could be pushed to a Docker registry such as Docker Hub or Microsoft Azure Container Registry. The various cloud service providers all provide services for hosting Docker containers.
+
+- The command for pushing this Docker image to Docker Hub would be:
+
+```{bash}
+#| eval: false
+docker push [Docker Hub Username]/[Docker Image Name]
+```
+
+- Once the image has been exposed via Docker Hub, it becomes accessible to the web in a similar manner to a public Github repository. After that, anyone else who has Docker installed on thier local machine can pull and run the image using a single command:
+
+```{bash}
+#| eval: false
+docker run -d -p 3838:3838 [Docker Hub Username]/[Docker Image Name]
+```
+
+- You could work on the app locally in an R Studio project environment using git and renv and then any updates you make can be pushed to the container using git. Ideally, you would automate aspects of this process using a pipeline (obviously ShinyApps.io is also an option for deploying shiny apps).
+
+- It's also worth emphasizing that a large app can be much more complicated than this single file one was, and involve orchestrating multiple containers simultaneously, for example so that you can have the frontend app running in one container and some kind of database running in a different one.
+
+- There are many other tools for working with Docker in much more complicated scenarios than the one illustrated here, such as **Docker Compose** which is a tool for creating a network of containers which can communicate with each other.
+
+## 8. Writing a Dockerfile to run a container as an interactive sandbox
+
+- Apart from using Docker to host websites and apps, the other major use case of Docker among Data Scientists is for creating interactive development environments for projects which are fully reproducible and completely isolated from other projects at the system level.
+
+- There are several good reasons why you might want to do this:
+    + It can enable you to experiment with using tools which involve making changes to the system environment without them impacting the system environment for any of your other projects, such as using packages which require installing new system libraries;
+    + Some R packages don't play as nicely with Windows or Mac OS as they do with Linux, so switching to a Linux-based container for development work can be advantageous if you need to use one of them; 
+    + It should make the project source code completely portable, so that it's very easy to either share the source code with someone else (by giving them the Dockerfile) or move it onto a different host environment (for instance, it means you could easily move the project onto a more powerful host machine if you require additional system resources);
+    + It allows you to reproduce your entire system stack for projects where having a completely reproducible workflow is 100% mission critical e.g. if you were submitting results from a clinical trial to a drug regulator.
+    
+- However, using a fully containerized development environment does create some additional challenges:
+    + You will also need to install a code editor such as R Studio Server or VS Code as part of building the Docker image as well as its associated dependencies;
+    + You will probably need to attach some persistent storage volumes to the containerized environment to read/write files;
+    + You have to be much more careful to ensure you don't accidentally delete anything important (e.g. work that hasn't been saved in a persistent storage medium) when you stop or start the container.
+    
+- The first one of the above problems can be solved by using a Docker image from the Rocker project which already comes with an edition of R Studio Server pre-installed. This would normally be used as a base image within a Dockerfile, but you can get a feel for what this is like by running the image below and then navigating to `localhost:8888` and then entering `rstudio` and `password` as the username and password respectively (press `control-c` to stop the container):
+
+```{bash}
+#| eval: false
+docker run --rm -p 8888:8787 -e PASSWORD=password rocker/rstudio:4.2
+```
+
+- On its own, running this image gives you access to a basic version of R Studio Server running in a container on your local machine in which you can execute R code and install new packages, but as it stands it's completely ephemeral; as soon as you stop the container from running any files you've created are lost. It also won't have the system dependencies as it stands to use important R packages such as the `tidyverse`.
+
+- Below is a Dockerfile which builds on this base image to create a more practical development container:
+
+```{docker}
+#| eval: false
+
+# Build container from Rocker/shiny base image:
+# Ubuntu 20.04
+# R 4.0 
+FROM rocker/rstudio:4
+
+# Update installer and install git and system-level dependencies for common packages (e.g. knitr, tidyverse)
+RUN apt-get update && apt-get install -y \
+    git \
+    make \
+    libcurl4-openssl-dev \
+    libssl-dev \
+    zlib1g-dev \
+    libxml2-dev \
+    libicu-dev \
+    pandoc
+    
+# Provide Github credentials
+RUN git config --global user.name 'David Kingman'
+RUN git config --global user.email 'david_kingman@hotmail.co.uk'
+
+# Customise R Studio by copying config file to the container
+COPY ./dev_container/rstudio-prefs.json /home/rstudio/.config/rstudio
+```
+
+- Running this kind of Dockerfile involves specifying more options when you use the `docker run` command, as shown by the example below:
+
+```{bash}
+#| eval: false
+docker build -t dev_container1 -f dev_container/Dockerfile .
+```
+
+```{bash}
+#| eval: false
+docker run \
+  -d \
+  -p 8888:8787 \
+  --name rstudio-server \
+  -v /Users/davidkingman/'My Drive'/'Data Science Training'/R/'3. Projects':/home/rstudio \
+  -e PASSWORD=password \
+  dev_container1
+```
+
+- The options we've supplied to the `docker run` command specify the following:
+    + **-d** - Run in detached mode;
+    + **-p 8888:8787** - Publish port 8787 from the container and map it to port 8888 on the host machine, so that you can access the container by navigating to `localhost:8888` in a web broswer;
+    + **--name rstudio-server** - Name the running container 'rstudio-server';
+    + **-v[local_drive]:[container_drive]** - The -v flag maps a storage volume on the host machine to the filesystem within the container itself, so that you can read and write files to the permanent storage on the host machine;
+    + **-e PASSWORD=password** - Set the password you need to log into R Studio Server inside the container to 'password' (this is obviously not a good idea for the long-term!);
+    + **dev_container1** - This is the name of the Docker image we are trying to run.
+
+- The single most important step in the above command is that you have to **map the storage volume within the `docker run` command**. By not specifying it within the Dockerfile itself you have the flexibility to map containers which are based on the same image to different storage volumes at runtime.
+
+- The above Dockerfile is based on the assumption that once we've got R Studio Server up and running within the container, we will then proceed to create an R Studio project, create or recreate the project's package library using `renv`, and configure the project to work with git. 
+
+- As it stands you would be able to use a local git project within the container which is produced by this Dockerfile, but not connect it to a private repository on Github without having to manually pass your credentials to the container once it is running.
+
+- There are some different ways of doing this, but it's complicated because you need to be able to pass a credential to the installation of git within the container (either as a PAT token or as a SSH key) without exposing it within the Dockerfile itself.
+
+- Additionally, there are other security considerations when it comes to running an interactive container which has read/write access to the host machine like this, such as setting a stronger password when you use the `docker run` command which isn't inadvertently being made public.
+ 
+## 9. Docker resources
+
+- Docker is an extremely large topic which has been extended in a wide variety of ways to facilitate more complicated use cases than the ones that were described above. The following resources provide additional information about using Docker in real-world projects:
+    + [Docker for Beginners](https://docker-curriculum.com/)
+    + [Docker Documentation](https://docs.docker.com/)
+    + [Docker Hub](https://hub.docker.com/)
+    + [Awesome Docker](https://github.com/veggiemonk/awesome-docker)
+    + [R Studio Environments](https://environments.rstudio.com/)
+    + [Using renv with Docker](https://rstudio.github.io/renv/articles/docker.html)
+    + [The Rocker Project](https://rocker-project.org/)
+    + [Configuring the Github API](https://happygitwithr.com/connect-intro.html)
