@@ -148,6 +148,7 @@ docker run busybox
 - We can also use the `docker ps` command to look at the history of all the containers we've ever run on our current system, including any we currently have running now (the `-a` flag instructs the Docker daemon to include all the containers we've previously run, rather than just the ones which are running at present):
 
 ```{bash}
+#| eval: false
 docker ps -a
 ```
 
@@ -208,6 +209,7 @@ docker rm static-site
 - As we've already seen, Docker images are the basis of containers. We can see the list of images we have installed locally like this:
 
 ```{bash}
+#| eval: false
 docker images
 ```
 
@@ -239,7 +241,7 @@ docker images
 
 - An example Dockerfile for hosting the 'Visual Machine Learning' shiny app which is contained in the `App.R` file in this repository is shown below as an example:
 
-```{docker}
+```{dockerfile}
 #| eval: false
 
 # Build container from Rocker/shiny base image:
@@ -309,6 +311,7 @@ docker build -t shiny_vml -f app_container/Dockerfile .
 - It will then be visible in the name of installed Docker images:
 
 ```{bash}
+#| eval: false
 docker images
 ```
 
@@ -324,6 +327,7 @@ docker run -d -p 3838:3838 --name app_container shiny_vml
 - Once the container is running, it can be stopped, restarted, removed and pruned using the commands which were explained in previous sections. It will appear in the list of run containers which you get from running the command below:
 
 ```{bash}
+#| eval: false
 docker ps -a
 ```
 
@@ -395,7 +399,7 @@ docker run --rm -p 8888:8787 -e PASSWORD=password rocker/rstudio:4.2
 
 - Below is a Dockerfile which builds on this base image to create a more practical development container:
 
-```{docker}
+```{dockerfile}
 #| eval: false
 
 # Build container from Rocker/shiny base image:

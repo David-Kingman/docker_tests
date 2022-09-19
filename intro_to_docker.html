@@ -2867,21 +2867,18 @@ vertical-align: -.125em;
 </ul>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> ps <span class="at">-a</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>CONTAINER ID   IMAGE     COMMAND   CREATED   STATUS    PORTS     NAMES</code></pre>
-</div>
 </div>
 <ul>
 <li>Of course, we usually want to do more with a container than just starting and stopping it. In order to play around with a container a bit more we can use the following command to activate an interactive bash shell inside the busybox container (the <code>-it</code> flag tells Docker to run it interactively, and the <code>sh</code> command opens a terminal shell):</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> run <span class="at">-it</span> busybox sh</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> run <span class="at">-it</span> busybox sh</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <ul>
 <li>We can also see a list of all the flags which the <code>docker run</code> command supports (terminal commands allow you to tweak their parameters by supplying <code>flags</code>, which are additional arguments that begin with a slash such as <code>-d</code>; these can be thought of in the same way as passing user-supplied arguments to a function in R):</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> run <span class="at">--help</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> run <span class="at">--help</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <ul>
 <li><p>Each stopped container still occupies some disk space, so it’s generally a good idea to clean up containers which we’re no longer using. This can be done by running <code>docker rm [CONTAINER ID]</code> and copying and pasting the <code>CONTAINER ID</code> string from the output of the <code>docker ps</code> command. Similarly, the command <code>docker container prune</code> should remove all stopped containers.</p></li>
@@ -2896,7 +2893,7 @@ vertical-align: -.125em;
 <li><p>The following Docker command will pull a Docker image which deploys an extremely basic single page website, build and run the container in the background, assign the container a name and publish a port so that it can be accessed by navigating a web browser to <code>localhost::80</code>:</p></li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> run <span class="at">-d</span> <span class="at">-p</span> 8888:80 <span class="at">--name</span> static-site prakhar1989/static-site</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> run <span class="at">-d</span> <span class="at">-p</span> 8888:80 <span class="at">--name</span> static-site prakhar1989/static-site</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <ul>
 <li><p>In the above command:</p>
@@ -2913,7 +2910,7 @@ vertical-align: -.125em;
 <li><p>To delete this image you would run:</p></li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> rm static-site</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> rm static-site</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="docker-images-1" class="level2">
@@ -2922,10 +2919,7 @@ vertical-align: -.125em;
 <li>As we’ve already seen, Docker images are the basis of containers. We can see the list of images we have installed locally like this:</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> images</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>REPOSITORY   TAG       IMAGE ID   CREATED   SIZE</code></pre>
-</div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> images</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <ul>
 <li><p>In the output from the above command, the TAG refers to a particular snapshot of the image and the IMAGE ID is the corresponding unique identifier for that image.</p></li>
@@ -2957,35 +2951,35 @@ vertical-align: -.125em;
 <li><p>An example Dockerfile for hosting the ‘Visual Machine Learning’ shiny app which is contained in the <code>App.R</code> file in this repository is shown below as an example:</p></li>
 </ul>
 <div class="cell">
-<pre class="docker cell-code"><code># Build container from Rocker/shiny base image:
-# Ubuntu 20.04
-# R 4.0 
-FROM rocker/shiny:4
-
-# Update installer and install git and system-level package dependencies
-RUN apt-get update &amp;&amp; apt-get install -y \
-    make \
-    git \
-    pandoc \
-    libicu-dev \
-    zlib1g-dev
-    
-# Install renv
-ENV RENV_VERSION 0.15.5
-RUN R -e &quot;install.packages(&#39;remotes&#39;, repos = c(CRAN = &#39;https://cloud.r-project.org&#39;))&quot;
-RUN R -e &quot;remotes::install_github(&#39;rstudio/renv@${RENV_VERSION}&#39;)&quot;
-
-# Clone git repo
-RUN git clone https://github.com/David-Kingman/docker_tests.git
-
-# Recreate project package library using renv::restore()
-RUN R -e &quot;renv::restore(lockfile = &#39;./docker_tests/renv.lock&#39;, repos = c(RSPM = &#39;https://packagemanager.rstudio.com/all/latest&#39;))&quot;
-
-# Copy App.R into /srv/shiny-server/
-RUN cp docker_tests/App.R /srv/shiny-server/
-
-# Run app
-CMD [&quot;/usr/bin/shiny-server&quot;]</code></pre>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode dockerfile code-with-copy"><code class="sourceCode dockerfile"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Build container from Rocker/shiny base image:</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Ubuntu 20.04</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="co"># R 4.0 </span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> rocker/shiny:4</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Update installer and install git and system-level package dependencies</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="kw">RUN</span> <span class="ex">apt-get</span> update <span class="kw">&amp;&amp;</span> <span class="ex">apt-get</span> install <span class="at">-y</span> <span class="dt">\</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>    make <span class="dt">\</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>    git <span class="dt">\</span></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>    pandoc <span class="dt">\</span></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>    libicu-dev <span class="dt">\</span></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>    zlib1g-dev</span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Install renv</span></span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a><span class="kw">ENV</span> RENV_VERSION 0.15.5</span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a><span class="kw">RUN</span> <span class="ex">R</span> <span class="at">-e</span> <span class="st">&quot;install.packages(&#39;remotes&#39;, repos = c(CRAN = &#39;https://cloud.r-project.org&#39;))&quot;</span></span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a><span class="kw">RUN</span> <span class="ex">R</span> <span class="at">-e</span> <span class="st">&quot;remotes::install_github(&#39;rstudio/renv@</span><span class="va">${RENV_VERSION}</span><span class="st">&#39;)&quot;</span></span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Clone git repo</span></span>
+<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a><span class="kw">RUN</span> <span class="fu">git</span> clone https://github.com/David-Kingman/docker_tests.git</span>
+<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a><span class="co"># Recreate project package library using renv::restore()</span></span>
+<span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a><span class="kw">RUN</span> <span class="ex">R</span> <span class="at">-e</span> <span class="st">&quot;renv::restore(lockfile = &#39;./docker_tests/renv.lock&#39;, repos = c(RSPM = &#39;https://packagemanager.rstudio.com/all/latest&#39;))&quot;</span></span>
+<span id="cb11-24"><a href="#cb11-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-25"><a href="#cb11-25" aria-hidden="true" tabindex="-1"></a><span class="co"># Copy App.R into /srv/shiny-server/</span></span>
+<span id="cb11-26"><a href="#cb11-26" aria-hidden="true" tabindex="-1"></a><span class="kw">RUN</span> <span class="fu">cp</span> docker_tests/App.R /srv/shiny-server/</span>
+<span id="cb11-27"><a href="#cb11-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-28"><a href="#cb11-28" aria-hidden="true" tabindex="-1"></a><span class="co"># Run app</span></span>
+<span id="cb11-29"><a href="#cb11-29" aria-hidden="true" tabindex="-1"></a><span class="kw">CMD</span> [<span class="st">&quot;/usr/bin/shiny-server&quot;</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <ul>
 <li><p>They principle which underpins a Dockerfile should be <strong>reproducibility</strong>, meaning that the resulting Docker image should work identically wherever it is hosted.</p></li>
@@ -3013,32 +3007,26 @@ CMD [&quot;/usr/bin/shiny-server&quot;]</code></pre>
 <li><p>To turn it into an actual container, the Dockerfile above would need to first be built into an image using the following command:</p></li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> build <span class="at">-t</span> shiny_vml <span class="at">-f</span> app_container/Dockerfile .</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> build <span class="at">-t</span> shiny_vml <span class="at">-f</span> app_container/Dockerfile .</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <ul>
 <li>It will then be visible in the name of installed Docker images:</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> images</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>REPOSITORY   TAG       IMAGE ID   CREATED   SIZE</code></pre>
-</div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> images</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <ul>
 <li>Then you can actually run an instance of this Docker image using the Docker run command shown below, which will make it available locally at the URL <code>localhost:3838</code>:</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> run <span class="at">-d</span> <span class="at">-p</span> 3838:3838 <span class="at">--name</span> app_container shiny_vml</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> run <span class="at">-d</span> <span class="at">-p</span> 3838:3838 <span class="at">--name</span> app_container shiny_vml</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <ul>
 <li><p>The above command takes port 3838 which is published by the container and maps it to the local port 3838 on our local computer. For the sake of the argument, you could map this to a different port on the local computer, such as <code>3838:5000</code>.</p></li>
 <li><p>Once the container is running, it can be stopped, restarted, removed and pruned using the commands which were explained in previous sections. It will appear in the list of run containers which you get from running the command below:</p></li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> ps <span class="at">-a</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>CONTAINER ID   IMAGE     COMMAND   CREATED   STATUS    PORTS     NAMES</code></pre>
-</div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> ps <span class="at">-a</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <ul>
 <li><p>Discovering the system-level dependencies of R and Python packages in order to include them in a Docker image can be tricky. Importantly, these are dependent on the Docker image’s operating system so they aren’t tracked by <code>renv</code> or <code>virtualenv</code> package environments in either language.</p></li>
@@ -3047,11 +3035,11 @@ CMD [&quot;/usr/bin/shiny-server&quot;]</code></pre>
 <li><p>Below is an example of how to use this to discover the dependencies for the Visual Machine Learning app:</p></li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create vector of package names</span></span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>paks <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&#39;dplyr&#39;</span>, <span class="st">&#39;stringr&#39;</span>, <span class="st">&#39;tibble&#39;</span>, <span class="st">&#39;ggplot2&#39;</span>, <span class="st">&#39;scales&#39;</span>, <span class="st">&#39;skimr&#39;</span>, <span class="st">&#39;nycflights13&#39;</span>, <span class="st">&#39;gapminder&#39;</span>, <span class="st">&#39;ISLR2&#39;</span>, <span class="st">&#39;shiny&#39;</span>, <span class="st">&#39;bslib&#39;</span>, <span class="st">&#39;thematic&#39;</span>, <span class="st">&#39;DT&#39;</span>, <span class="st">&#39;FNN&#39;</span>, <span class="st">&#39;rpart&#39;</span>, <span class="st">&#39;rpart.plot&#39;</span>)</span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Query RSPM API (rocker/shiny:4.0 is based on Ubuntu 20.04)</span></span>
-<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>remotes<span class="sc">::</span><span class="fu">system_requirements</span>(<span class="at">package =</span> paks, <span class="at">os =</span> <span class="st">&#39;ubuntu&#39;</span>, <span class="at">os_release =</span> <span class="st">&#39;20.04&#39;</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create vector of package names</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>paks <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&#39;dplyr&#39;</span>, <span class="st">&#39;stringr&#39;</span>, <span class="st">&#39;tibble&#39;</span>, <span class="st">&#39;ggplot2&#39;</span>, <span class="st">&#39;scales&#39;</span>, <span class="st">&#39;skimr&#39;</span>, <span class="st">&#39;nycflights13&#39;</span>, <span class="st">&#39;gapminder&#39;</span>, <span class="st">&#39;ISLR2&#39;</span>, <span class="st">&#39;shiny&#39;</span>, <span class="st">&#39;bslib&#39;</span>, <span class="st">&#39;thematic&#39;</span>, <span class="st">&#39;DT&#39;</span>, <span class="st">&#39;FNN&#39;</span>, <span class="st">&#39;rpart&#39;</span>, <span class="st">&#39;rpart.plot&#39;</span>)</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Query RSPM API (rocker/shiny:4.0 is based on Ubuntu 20.04)</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>remotes<span class="sc">::</span><span class="fu">system_requirements</span>(<span class="at">package =</span> paks, <span class="at">os =</span> <span class="st">&#39;ubuntu&#39;</span>, <span class="at">os_release =</span> <span class="st">&#39;20.04&#39;</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] &quot;apt-get install -y make&quot;       &quot;apt-get install -y libicu-dev&quot;
 [3] &quot;apt-get install -y pandoc&quot;     &quot;apt-get install -y zlib1g-dev&quot;</code></pre>
@@ -3064,13 +3052,13 @@ CMD [&quot;/usr/bin/shiny-server&quot;]</code></pre>
 <li><p>The command for pushing this Docker image to Docker Hub would be:</p></li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> push [Docker Hub Username]/[Docker Image Name]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> push [Docker Hub Username]/[Docker Image Name]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <ul>
 <li>Once the image has been exposed via Docker Hub, it becomes accessible to the web in a similar manner to a public Github repository. After that, anyone else who has Docker installed on thier local machine can pull and run the image using a single command:</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> run <span class="at">-d</span> <span class="at">-p</span> 3838:3838 [Docker Hub Username]/[Docker Image Name]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> run <span class="at">-d</span> <span class="at">-p</span> 3838:3838 [Docker Hub Username]/[Docker Image Name]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <ul>
 <li><p>You could work on the app locally in an R Studio project environment using git and renv and then any updates you make can be pushed to the container using git. Ideally, you would automate aspects of this process using a pipeline (obviously ShinyApps.io is also an option for deploying shiny apps).</p></li>
@@ -3098,50 +3086,50 @@ CMD [&quot;/usr/bin/shiny-server&quot;]</code></pre>
 <li><p>The first one of the above problems can be solved by using a Docker image from the Rocker project which already comes with an edition of R Studio Server pre-installed. This would normally be used as a base image within a Dockerfile, but you can get a feel for what this is like by running the image below and then navigating to <code>localhost:8888</code> and then entering <code>rstudio</code> and <code>password</code> as the username and password respectively (press <code>control-c</code> to stop the container):</p></li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> run <span class="at">--rm</span> <span class="at">-p</span> 8888:8787 <span class="at">-e</span> PASSWORD=password rocker/rstudio:4.2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> run <span class="at">--rm</span> <span class="at">-p</span> 8888:8787 <span class="at">-e</span> PASSWORD=password rocker/rstudio:4.2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <ul>
 <li><p>On its own, running this image gives you access to a basic version of R Studio Server running in a container on your local machine in which you can execute R code and install new packages, but as it stands it’s completely ephemeral; as soon as you stop the container from running any files you’ve created are lost. It also won’t have the system dependencies as it stands to use important R packages such as the <code>tidyverse</code>.</p></li>
 <li><p>Below is a Dockerfile which builds on this base image to create a more practical development container:</p></li>
 </ul>
 <div class="cell">
-<pre class="docker cell-code"><code># Build container from Rocker/shiny base image:
-# Ubuntu 20.04
-# R 4.0 
-FROM rocker/rstudio:4
-
-# Update installer and install git and system-level dependencies for common packages (e.g. knitr, tidyverse)
-RUN apt-get update &amp;&amp; apt-get install -y \
-    git \
-    make \
-    libcurl4-openssl-dev \
-    libssl-dev \
-    zlib1g-dev \
-    libxml2-dev \
-    libicu-dev \
-    pandoc
-    
-# Provide Github credentials
-RUN git config --global user.name &#39;David Kingman&#39;
-RUN git config --global user.email &#39;david_kingman@hotmail.co.uk&#39;
-
-# Customise R Studio by copying config file to the container
-COPY ./dev_container/rstudio-prefs.json /home/rstudio/.config/rstudio</code></pre>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode dockerfile code-with-copy"><code class="sourceCode dockerfile"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Build container from Rocker/shiny base image:</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Ubuntu 20.04</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="co"># R 4.0 </span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> rocker/rstudio:4</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Update installer and install git and system-level dependencies for common packages (e.g. knitr, tidyverse)</span></span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a><span class="kw">RUN</span> <span class="ex">apt-get</span> update <span class="kw">&amp;&amp;</span> <span class="ex">apt-get</span> install <span class="at">-y</span> <span class="dt">\</span></span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>    git <span class="dt">\</span></span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>    make <span class="dt">\</span></span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>    libcurl4-openssl-dev <span class="dt">\</span></span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>    libssl-dev <span class="dt">\</span></span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>    zlib1g-dev <span class="dt">\</span></span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a>    libxml2-dev <span class="dt">\</span></span>
+<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a>    libicu-dev <span class="dt">\</span></span>
+<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a>    pandoc</span>
+<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb21-17"><a href="#cb21-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Provide Github credentials</span></span>
+<span id="cb21-18"><a href="#cb21-18" aria-hidden="true" tabindex="-1"></a><span class="kw">RUN</span> <span class="fu">git</span> config <span class="at">--global</span> user.name <span class="st">&#39;David Kingman&#39;</span></span>
+<span id="cb21-19"><a href="#cb21-19" aria-hidden="true" tabindex="-1"></a><span class="kw">RUN</span> <span class="fu">git</span> config <span class="at">--global</span> user.email <span class="st">&#39;david_kingman@hotmail.co.uk&#39;</span></span>
+<span id="cb21-20"><a href="#cb21-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-21"><a href="#cb21-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Customise R Studio by copying config file to the container</span></span>
+<span id="cb21-22"><a href="#cb21-22" aria-hidden="true" tabindex="-1"></a><span class="kw">COPY</span> ./dev_container/rstudio-prefs.json /home/rstudio/.config/rstudio</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <ul>
 <li>Running this kind of Dockerfile involves specifying more options when you use the <code>docker run</code> command, as shown by the example below:</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> build <span class="at">-t</span> dev_container1 <span class="at">-f</span> dev_container/Dockerfile .</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> build <span class="at">-t</span> dev_container1 <span class="at">-f</span> dev_container/Dockerfile .</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> run <span class="dt">\</span></span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">-d</span> <span class="dt">\</span></span>
-<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">-p</span> 8888:8787 <span class="dt">\</span></span>
-<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">--name</span> rstudio-server <span class="dt">\</span></span>
-<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">-v</span> /Users/davidkingman/<span class="st">&#39;My Drive&#39;</span>/<span class="st">&#39;Data Science Training&#39;</span>/R/<span class="st">&#39;3. Projects&#39;</span>:/home/rstudio <span class="dt">\</span></span>
-<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">-e</span> PASSWORD=password <span class="dt">\</span></span>
-<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>  dev_container1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> run <span class="dt">\</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">-d</span> <span class="dt">\</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">-p</span> 8888:8787 <span class="dt">\</span></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">--name</span> rstudio-server <span class="dt">\</span></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">-v</span> /Users/davidkingman/<span class="st">&#39;My Drive&#39;</span>/<span class="st">&#39;Data Science Training&#39;</span>/R/<span class="st">&#39;3. Projects&#39;</span>:/home/rstudio <span class="dt">\</span></span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">-e</span> PASSWORD=password <span class="dt">\</span></span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>  dev_container1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <ul>
 <li><p>The options we’ve supplied to the <code>docker run</code> command specify the following:</p>
